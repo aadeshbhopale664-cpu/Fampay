@@ -4,6 +4,16 @@
   border-radius: 20px;
   overflow: hidden;
   position: relative;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.scan-pay-card:hover {
+  transform: scale(1.02);
+}
+
+.scan-pay-card:active {
+  transform: scale(0.98);
 }
 
 .scan-pay-visual {
