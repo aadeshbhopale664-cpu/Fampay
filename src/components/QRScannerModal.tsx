@@ -6,10 +6,18 @@ interface QRScannerModalProps {
   onClose: () => void;
 }
 
+const themes = [
+  { id: 1, name: 'default', color: '#10b981', icon: 'qr' },
+  { id: 2, name: 'cricket', color: '#ef4444', icon: 'shield', locked: true },
+  { id: 3, name: 'bird', color: '#3b82f6', icon: 'circle' },
+  { id: 4, name: 'nature', color: '#eab308', icon: 'leaf' }
+];
+
 export default function QRScannerModal({ isOpen, onClose }: QRScannerModalProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [error, setError] = useState<string>('');
+  const [selectedTheme, setSelectedTheme] = useState(0);
 
   useEffect(() => {
     if (isOpen) {
@@ -50,13 +58,52 @@ export default function QRScannerModal({ isOpen, onClose }: QRScannerModalProps)
 
   if (!isOpen) return null;
 
+  const currentTheme = themes[selectedTheme];
+  const getThemeBackground = () => {
+    switch(currentTheme.name) {
+      case 'cricket':
+        return 'linear-gradient(to bottom, #87ceeb 0%, #87ceeb 60%, #1a1a1a 60%, #1a1a1a 100%)';
+      case 'bird':
+        return 'linear-gradient(135deg, #3b82f6 0%, #1e40af 100%)';
+      case 'nature':
+        return 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)';
+      default:
+        return 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+    }
+  };
+
   return (
-    <div className="qr-scanner-modal-overlay">
+    <div className="qr-scanner-modal-overlay" style={{ background: getThemeBackground() }}>
       <button className="close-btn-top" onClick={onClose}>
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
           <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
         </svg>
       </button>
+
+      {currentTheme.name === 'cricket' && (
+        <>
+          <div className="theme-decoration cricket-player">
+            <svg width="200" height="300" viewBox="0 0 200 300" fill="none">
+              <ellipse cx="100" cy="280" rx="80" ry="20" fill="rgba(0,0,0,0.2)"/>
+              <rect x="70" y="150" width="60" height="130" rx="5" fill="#1e3a8a"/>
+              <circle cx="100" cy="120" r="25" fill="#8b5a3c"/>
+              <path d="M 60 180 L 40 220 L 50 220 L 70 185 Z" fill="#8b5a3c"/>
+              <path d="M 140 180 L 160 220 L 150 220 L 130 185 Z" fill="#8b5a3c"/>
+              <rect x="35" y="190" width="8" height="60" rx="4" fill="#cd7f32"/>
+              <rect x="38" y="185" width="50" height="15" rx="7" fill="#dc2626"/>
+            </svg>
+            <div className="sparkles">
+              <div className="sparkle" style={{ top: '20%', right: '15%' }}>✦</div>
+              <div className="sparkle" style={{ top: '35%', right: '25%' }}>✦</div>
+              <div className="sparkle" style={{ bottom: '45%', right: '20%' }}>✦</div>
+            </div>
+          </div>
+          <div className="stadium-lights">
+            <div className="light-beam"></div>
+            <div className="light-beam" style={{ animationDelay: '0.5s' }}></div>
+          </div>
+        </>
+      )}
 
       <div className="camera-container-fullscreen">
         {error ? (
@@ -81,67 +128,59 @@ export default function QRScannerModal({ isOpen, onClose }: QRScannerModalProps)
         )}
       </div>
 
-      <div className="bottom-controls">
-        <button className="control-btn">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" strokeWidth="2"/>
-            <path d="M3 9h18M9 21V9" stroke="currentColor" strokeWidth="2"/>
-          </svg>
-        </button>
-
-        <button className="control-btn">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round"/>
-          </svg>
-        </button>
-
-        <button className="control-btn">
-          <span style={{ fontSize: '16px', fontWeight: '600' }}>1×</span>
-        </button>
-      </div>
-
-      <div className="bottom-banner">
-        <div className="banner-icon">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
-            <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
-            <circle cx="12" cy="12" r="3" fill="currentColor"/>
-          </svg>
+      {currentTheme.name === 'cricket' && (
+        <div className="unlock-banner">
+          <button className="unlock-btn">
+            Unlock for ₹79 ₹9
+          </button>
         </div>
-        <div className="banner-text">
-          <p>Your phone number will be visible to the receiver. Hide phone number from your UPI ID now!</p>
-        </div>
-        <div className="banner-arrow">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path d="M9 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </div>
-      </div>
-
-      <div className="powered-by">
-        <span>Powered by</span>
-        <span className="bank-logo">YES BANK</span>
-        <span className="upi-logo">UPI</span>
-      </div>
+      )}
 
       <div className="theme-selector">
         <p>Try new themes by scrolling</p>
         <div className="theme-icons">
-          <div className="theme-icon active">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
-              <rect x="4" y="4" width="16" height="16" rx="2" stroke="currentColor" strokeWidth="2"/>
-              <path d="M8 8h8M8 12h8M8 16h4" stroke="currentColor" strokeWidth="2"/>
-            </svg>
-          </div>
-          <div className="theme-icon">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
-              <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z" stroke="currentColor" strokeWidth="2"/>
-            </svg>
-          </div>
-          <div className="theme-icon">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
-              <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
-            </svg>
-          </div>
+          {themes.map((theme, index) => (
+            <div
+              key={theme.id}
+              className={`theme-icon ${selectedTheme === index ? 'active' : ''} ${theme.locked ? 'locked' : ''}`}
+              onClick={() => setSelectedTheme(index)}
+            >
+              {theme.icon === 'qr' && (
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                  <rect x="3" y="3" width="8" height="8" rx="1" stroke="currentColor" strokeWidth="2"/>
+                  <rect x="13" y="3" width="8" height="8" rx="1" stroke="currentColor" strokeWidth="2"/>
+                  <rect x="3" y="13" width="8" height="8" rx="1" stroke="currentColor" strokeWidth="2"/>
+                  <rect x="13" y="13" width="8" height="8" rx="1" stroke="currentColor" strokeWidth="2"/>
+                </svg>
+              )}
+              {theme.icon === 'shield' && (
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 2L2 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z" stroke="currentColor" strokeWidth="2"/>
+                  <path d="M9 12l2 2 4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                </svg>
+              )}
+              {theme.icon === 'circle' && (
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
+                  <path d="M8 12h8M12 8v8" stroke="currentColor" strokeWidth="2"/>
+                </svg>
+              )}
+              {theme.icon === 'leaf' && (
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                  <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" stroke="currentColor" strokeWidth="2"/>
+                  <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" stroke="currentColor" strokeWidth="2"/>
+                </svg>
+              )}
+              {theme.locked && (
+                <div className="lock-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <rect x="5" y="11" width="14" height="10" rx="2"/>
+                    <path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="#000" strokeWidth="2" fill="none"/>
+                  </svg>
+                </div>
+              )}
+            </div>
+          ))}
         </div>
       </div>
     </div>
