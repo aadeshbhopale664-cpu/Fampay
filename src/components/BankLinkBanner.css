@@ -1,0 +1,109 @@
+.bank-link-banner {
+  background: linear-gradient(135deg, #2a1a3a 0%, #1a0a2a 100%);
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #3a2a4a;
+}
+
+.bank-link-banner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 20% 50%, rgba(138, 43, 226, 0.1) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.bank-link-content {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+}
+
+.bank-link-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.link-btn {
+  margin-top: 12px;
+  background: transparent;
+  border: none;
+  color: #ff8c00;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0;
+  transition: all 0.2s ease;
+}
+
+.link-btn:hover {
+  gap: 8px;
+  color: #ffaa00;
+}
+
+.upi-logo {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: perspective(600px) rotateY(-15deg);
+  animation: rotate3d 4s ease-in-out infinite;
+}
+
+.upi-text {
+  font-size: 48px;
+  font-weight: 900;
+  color: #ff8c00;
+  text-shadow: 0 4px 12px rgba(255, 140, 0, 0.5);
+  line-height: 1;
+  letter-spacing: -2px;
+}
+
+.upi-version {
+  font-size: 20px;
+  font-weight: 700;
+  color: #ff8c00;
+  margin-top: -4px;
+}
+
+@keyframes rotate3d {
+  0%, 100% {
+    transform: perspective(600px) rotateY(-15deg) translateY(0px);
+  }
+  50% {
+    transform: perspective(600px) rotateY(-15deg) translateY(-8px);
+  }
+}
+
+@media (max-width: 400px) {
+  .bank-link-banner {
+    padding: 20px;
+  }
+
+  .bank-link-title {
+    font-size: 16px;
+  }
+
+  .upi-text {
+    font-size: 40px;
+  }
+
+  .upi-version {
+    font-size: 18px;
+  }
+}
